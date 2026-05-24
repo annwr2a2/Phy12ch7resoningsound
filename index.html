@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مختبر الرنين في الأعمدة الهوائية - كامبريدج</title>
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #28a745;
+            --warning-color: #ffc107;
+            --bg-color: #f8f9fa;
+            --text-color: #333;
+            --author-bg: #004085; 
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        @media (min-width: 768px) {
+            body { padding: 20px; }
+            .container { padding: 25px; }
+        }
+
+        .author-banner {
+            background-color: var(--author-bg);
+            color: #ffffff;
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0, 64, 133, 0.2);
+        }
+
+        .author-banner h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        .author-banner p {
+            margin: 5px 0 0 0;
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        @media (max-width: 576px) {
+            .author-banner h2 { font-size: 1.2rem; }
+            .author-banner p { font-size: 0.95rem; }
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            text-align: center;
+            color: #111;
+            margin-bottom: 5px;
+        }
+
+        @media (max-width: 576px) {
+            h1 { font-size: 1.4rem; }
+        }
+
+        .tabs {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            width: 100%;
+            padding: 12px 15px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            border: 2px solid var(--primary-color);
+            background: white;
+            color: var(--primary-color);
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        @media (min-width: 576px) {
+            .tabs {
+                flex-direction: row;
+                justify-content: center;
+                gap: 15px;
+            }
+            .tab-btn { width: auto; padding: 12px 25px; }
+        }
+
+        .tab-btn.active, .tab-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .content-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        @media (min-width: 992px) {
+            .content-layout {
+                grid-template-columns: 1.4fr 1fr;
+            }
+        }
+
+        .iframe-container {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 75%; 
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        @media (min-width: 992px) {
+            .iframe-container {
+                height: 530px;
+                padding-bottom: 0; 
+            }
+        }
+
+        iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .control-panel {
+            background: #f1f3f5;
+            padding: 15px;
+            border-radius: 8px;
+            border-right: 5px solid var(--primary-color);
+            box-sizing: border-box;
+        }
+
+        @media (min-width: 768px) {
+            .control-panel { padding: 20px; }
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+            text-align: left;
+            direction: ltr;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.2s;
+        }
+
+        .btn-submit:hover {
+            background: #218838;
+        }
+
+        .btn-icon {
+            background: var(--warning-color);
+            color: #212529;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            font-size: 15px;
+        }
+
+        .btn-icon:hover {
+            background: #e0a800;
+        }
+
+        .quiz-section {
+            margin-top: 25px;
+            padding: 15px;
+            background: #e9ecef;
+            border-radius: 8px;
+        }
+
+        @media (min-width: 768px) {
+            .quiz-section { padding: 20px; }
+        }
+
+        .quiz-question {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            line-height: 1.7;
+        }
+
+        @media (min-width: 768px) {
+            .quiz-question { font-size: 18px; }
+        }
+
+        .model-answer {
+            margin-top: 15px;
+            padding: 15px;
+            background: #ffffff;
+            color: #333333;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            display: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            overflow-x: auto; 
+        }
+
+        .model-answer h4 {
+            margin: 0 0 15px 0;
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+        }
+
+        .steps-lang {
+            direction: rtl;
+            text-align: right;
+            line-height: 1.8;
+            font-size: 14px;
+        }
+
+        @media (min-width: 768px) {
+            .steps-lang { font-size: 16px; }
+        }
+
+        .math-block {
+            display: block;
+            direction: ltr;
+            text-align: left;
+            margin: 12px 0;
+            font-family: "Cambria Math", "Cambria", "Times New Roman", serif;
+            font-style: italic;
+            font-size: 18px;
+            color: #007bff;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        @media (min-width: 768px) {
+            .math-block { font-size: 21px; }
+        }
+
+        .math-fraction {
+            display: inline-flex;
+            flex-direction: column;
+            vertical-align: middle;
+            text-align: center;
+            padding: 0 6px;
+            font-style: italic;
+        }
+
+        .math-numerator {
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 1px;
+        }
+
+        .math-denominator {
+            padding-top: 1px;
+        }
+
+        .math-inline {
+            font-family: "Cambria Math", "Cambria", "Times New Roman", serif;
+            font-style: italic;
+            font-size: 18px;
+            color: #007bff;
+            direction: ltr;
+            display: inline-block;
+        }
+
+        @media (min-width: 768px) {
+            .math-inline { font-size: 20px; }
+        }
+        
+        .section-title {
+            color: #007bff;
+            font-weight: bold;
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="author-banner">
+        <h2>إعداد الأستاذ: أنور البلوشي</h2>
+        <p>📱 للتواصل والاستفسار: 92818606</p>
+    </div>
+
+    <h1>مختبر الرنين في الأعمدة الهوائية التفاعلي</h1>
+    <p style="text-align: center; color: #666; font-size: 14px; margin-bottom: 20px;">توليد ديناميكي لأسئلة الامتحانات وفقاً لمعايير فيزياء كامبريدج</p>
+    
+    <hr>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchPipe('closed')">أنبوب مغلق من طرف واحد (Closed Pipe)</button>
+        <button class="tab-btn" onclick="switchPipe('open')">أنبوب مفتوح الطرفين (Open Pipe)</button>
+    </div>
+
+    <div class="content-layout">
+        <div class="iframe-container">
+            <iframe id="geogebra-frame" src="https://www.geogebra.org/material/iframe/id/gm9k6hkg/width/700/height/500/border/888888/sfsb/true/smb/false/stb/false/stbh/false/ai/false/asb/false/sri/false/rc/false/ld/false/sdz/false/ctl/false"></iframe>
+        </div>
+
+        <div class="control-panel">
+            <h3>لوحة التحكم والتدريب</h3>
+            
+            <button class="btn-submit btn-icon" onclick="requestNewTarget()">
+                <span>🔄 اضغط هنا لتغيير فكرة التحدي والمطلوب</span>
+            </button>
+            
+            <div class="form-group" id="group-L">
+                <label id="label-L">طول عمود الهواء المستخرج من الجيوجبرا (L) بالأمتار:</label>
+                <input type="number" id="input-L" step="0.001" placeholder="مثال: 0.54">
+            </div>
+
+            <div class="form-group" id="group-nodes">
+                <label id="label-nodes">عدد العقد (Nodes) الظاهرة في الرسمة:</label>
+                <input type="number" id="input-nodes" placeholder="مثال: 2">
+            </div>
+
+            <div class="form-group" id="group-f">
+                <label id="label-f">التردد المستخرج من الجيوجبرا (f) بالـ Hz:</label>
+                <input type="number" id="input-f" placeholder="مثال: 480">
+            </div>
+
+            <div class="form-group" id="group-v">
+                <label id="label-v">سرعة الصوت الافتراضية المستخرجة (v) بالـ m s⁻¹:</label>
+                <input type="number" id="input-v" placeholder="مثال: 343">
+            </div>
+
+            <button class="btn-submit" onclick="generateQuestionFromInputs()">توليد سؤال الامتحان بناءً على المعطيات 📝</button>
+        </div>
+    </div>
+
+    <div class="quiz-section" id="quiz-section" style="display: none;">
+        <div class="quiz-question" id="quiz-text"></div>
+        
+        <button class="btn-submit" style="background-color: var(--primary-color);" onclick="showAnswer()">إظهار نموذج الإجابة العلمي (Model Answer)</button>
+
+        <div class="model-answer" id="model-answer-box">
+            <h4>خطوات الاشتقاق والحل الرياضي الدقيق:</h4>
+            <div id="answer-steps" class="steps-lang"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const urls = {
+        closed: "https://www.geogebra.org/material/iframe/id/gm9k6hkg/width/700/height/500/border/888888/sfsb/true/smb/false/stb/false/stbh/false/ai/false/asb/false/sri/false/rc/false/ld/false/sdz/false/ctl/false",
+        open: "https://www.geogebra.org/material/iframe/id/tmeypwgx/width/700/height/500/border/888888/sfsb/true/smb/false/stb/false/stbh/false/ai/false/asb/false/sri/false/rc/false/ld/false/sdz/false/ctl/false"
+    };
+
+    let currentPipe = 'closed';
+    let questionPipeTarget = 'closed'; 
+    let currentUnknownType = -1; 
+
+    window.onload = function() {
+        requestNewTarget();
+    };
+
+    function switchPipe(type) {
+        currentPipe = type;
+        document.getElementById('geogebra-frame').src = urls[type];
+        
+        const buttons = document.querySelectorAll('.tab-btn');
+        buttons.forEach(btn => btn.classList.remove('active'));
+        if(type === 'closed') buttons[0].classList.add('active');
+        else buttons[1].classList.add('active');
+
+        document.getElementById('quiz-section').style.display = 'none';
+        document.getElementById('model-answer-box').style.display = 'none';
+        
+        requestNewTarget();
+    }
+
+    function clearInputs() {
+        document.getElementById('input-L').value = '';
+        document.getElementById('input-nodes').value = '';
+        document.getElementById('input-f').value = '';
+        document.getElementById('input-v').value = '';
+    }
+
+    function showAllGroups() {
+        document.getElementById('group-L').style.display = 'block';
+        document.getElementById('group-nodes').style.display = 'block';
+        document.getElementById('group-f').style.display = 'block';
+        document.getElementById('group-v').style.display = 'block';
+    }
+
+    function requestNewTarget() {
+        clearInputs();
+        showAllGroups();
+        document.getElementById('quiz-section').style.display = 'none';
+        document.getElementById('model-answer-box').style.display = 'none';
+
+        currentUnknownType = Math.floor(Math.random() * 4);
+        questionPipeTarget = (Math.random() > 0.5) ? 'closed' : 'open';
+
+        if (currentUnknownType === 0) {
+            document.getElementById('group-v').style.display = 'none'; 
+        } 
+        else if (currentUnknownType === 1) {
+            document.getElementById('group-f').style.display = 'none'; 
+        } 
+        else if (currentUnknownType === 2) {
+            document.getElementById('group-L').style.display = 'none'; 
+        }
+        else if (currentUnknownType === 3) {
+            document.getElementById('group-v').style.display = 'none';
+        }
+    }
+
+    function getResonanceOrderText(nodes) {
+        const orders = ["الأول (First Resonance)", "الثاني (Second Resonance)", "الثالث (Third Resonance)", "الرابع (Fourth Resonance)", "الخامس (Fifth Resonance)"];
+        let idx = nodes - 1;
+        if (idx < 0) idx = 0;
+        if (idx > 4) return `الذي يحتوي على ${nodes} عقد`;
+        return orders[idx];
+    }
+
+    function generateQuestionFromInputs() {
+        if (currentUnknownType === -1) {
+            alert("الرجاء الضداد على الزر الأصفر أولاً لتحديد فكرة التحدي!");
+            return;
+        }
+
+        const L = parseFloat(document.getElementById('input-L').value);
+        const nodes = parseInt(document.getElementById('input-nodes').value);
+        const f = parseFloat(document.getElementById('input-f').value);
+        const v = parseFloat(document.getElementById('input-v').value);
+
+        if (isNaN(nodes)) {
+            alert("عدد العقد معطى أساسي يجب استخراجه من الرسمة وكتابته.");
+            return;
+        }
+        if (currentUnknownType === 0 && (isNaN(L) || isNaN(f))) {
+            alert("يرجى إدخال طول عمود الهواء والتردد أولاً.");
+            return;
+        }
+        if (currentUnknownType === 1 && (isNaN(L) || isNaN(v))) {
+            alert("يرجى إدخال طول عمود الهواء وسرعة الصوت أولاً.");
+            return;
+        }
+        if (currentUnknownType === 2 && (isNaN(f) || isNaN(v))) {
+            alert("يرجى إدخال التردد وسرعة الصوت أولاً.");
+            return;
+        }
+        if (currentUnknownType === 3 && (isNaN(L) || isNaN(f))) {
+            alert("لتوليد سؤال النسبة والتناسب، يرجى إدخال الطول والتردد الحاليين المستخرجين.");
+            return;
+        }
+
+        const quizSection = document.getElementById('quiz-section');
+        const quizText = document.getElementById('quiz-text');
+        quizSection.style.display = 'block';
+        document.getElementById('model-answer-box').style.display = 'none';
+
+        const pipeText = (questionPipeTarget === 'closed') ? "مغلق من طرف واحد" : "مفتوح الطرفين";
+        let n = (questionPipeTarget === 'closed') ? (2 * nodes) - 1 : nodes;
+        let resonanceText = getResonanceOrderText(nodes);
+
+        let questionHTML = `أنبوب هوائي <strong>${pipeText}</strong> أظهر نمط <strong>الرنين ${resonanceText}</strong> حيث يحتوي عمود الهواء على عدد عقد يبلغ (<strong>${nodes}</strong>). `;
+
+        if (currentUnknownType === 0) {
+            questionHTML += `إذا علمت أن طول عمود الهواء المرصود هو <span class="math-inline">L = ${L} m</span>، وتردد النغمة الصوتية الصادرة هو <span class="math-inline">f = ${f} Hz</span>.<br><br>
+            <strong>أوجد ما يلي:</strong><br>
+            1) حدد <strong>عدد بطون الاهتزاز (Antinodes)</strong> و<strong>رتبة النغمة التوافقية (<span class="math-inline">n</span>)</strong> المتكونة داخل الأنبوب.<br>
+            2) احسب <strong>الطول الموجي (<span class="math-inline">&lambda;</span>)</strong> للموجة الصوتية بالخطوات الفيزيائية المعتمدة.<br>
+            3) استنتج <strong>سرعة انتشار الصوت (<span class="math-inline">v</span>)</strong> في الهواء مبيناً الوحدة الصحيحة.`;
+        } 
+        else if (currentUnknownType === 1) {
+            questionHTML += `إذا علمت أن طول عمود الهواء المرصود هو <span class="math-inline">L = ${L} m</span>، وسرعة الصوت الافتراضية بالوسط هي <span class="math-inline">v = ${v} m s⁻¹</span>.<br><br>
+            <strong>أوجد ما يلي:</strong><br>
+            1) حدد <strong>عدد بطون الاهتزاز (Antinodes)</strong> و<strong>رتبة النغمة التوافقية (<span class="math-inline">n</span>)</strong> المتكونة داخل الأنبوب.<br>
+            2) احسب <strong>الطول الموجي (<span class="math-inline">&lambda;</span>)</strong> للموجة الصوتية بالاعتماد على طول الأنبوب.<br>
+            3) احسب قيمة <strong>تردد الصوت الصادر (<span class="math-inline">f</span>)</strong> بوحدة الـ Hz.`;
+        } 
+        else if (currentUnknownType === 2) {
+            questionHTML += `إذا علمت أن تردد النغمة الصوتية المقاسة هو <span class="math-inline">f = ${f} Hz</span>، وسرعة انتشار الصوت في المختبر هي <span class="math-inline">v = ${v} m s⁻¹</span>.<br><br>
+            <strong>أوجد ما يلي:</strong><br>
+            1) حدد <strong>عدد بطون الاهتزاز (Antinodes)</strong> و<strong>رتبة النغمة التوافقية (<span class="math-inline">n</span>)</strong> المتكونة.<br>
+            2) احسب <strong>الطول الموجي (<span class="math-inline">&lambda;</span>)</strong> للموجة الصوتية مباشرة بالاعتماد على التردد والسرعة.<br>
+            3) استنتج بالخطوات الدقيقة <strong>طول عمود الهواء (<span class="math-inline">L</span>)</strong> بالأمتار.`;
+        }
+        else {
+            let nextResonanceText = getResonanceOrderText(nodes + 1);
+            questionHTML += `إذا كانت المعطيات المرصودة هي الطول <span class="math-inline">L = ${L} m</span> والتردد <span class="math-inline">f₁ = ${f} Hz</span>.<br><br>
+            <strong>أوجد ما يلي (باستخدام قوانين النسبة والتناسب):</strong><br>
+            1) احسب <strong>الطول الموجي (<span class="math-inline">&lambda;₁</span>)</strong> الحالي المتشكل في الأنبوب.<br>
+            2) إذا انتقل الأنبوب لنمط <strong>الرنين التالي مباشرًا (${nextResonanceText})</strong> عند نفس الطول، أوجد <strong>النسبة</strong> بين التردد الجديد والتردد القديم <span class="math-inline">(f₂ / f₁)</span>.<br>
+            3) احسب القيمة المطلقة <strong>للتردد الجديد (<span class="math-inline">f₂</span>)</strong> بالـ Hz دون الحاجة لاستخدام قيمة سرعة الصوت الثابتة بالوسط.`;
+        }
+
+        quizText.innerHTML = questionHTML;
+        buildModelAnswer(currentUnknownType, L, nodes, f, v, n, resonanceText);
+    }
+
+    function buildModelAnswer(unknownType, L, nodes, f, v, n, resonanceText) {
+        let antinodes = (questionPipeTarget === 'closed') ? nodes : nodes + 1;
+        let steps = "";
+
+        // [1] إجابة السؤال الأول
+        steps += `<span class="section-title">[1] إجابة السؤال الأول (الخصائص الهندسية ورتبة الرنين):</span>`;
+        steps += `• حالة الرنين المعروضة هندسياً تمثل نمط <strong>الرنين ${resonanceText}</strong>.<br>`;
+        if (questionPipeTarget === 'closed') {
+            steps += `• في الأنبوب <strong>المغلق من طرف واحد</strong>، يتساوى دائماً <strong>عدد العقد والبطون</strong>:<br>
+            <strong>عدد البطون (Antinodes)</strong> = عدد العقد = <span class="math-inline">A = ${antinodes}</span><br>
+            • <strong>رتبة النغمة التوافقية (n)</strong> المرتبطة بهذا الرنين تأخذ القيم الفردية فقط:<br>
+            <div class="math-block">n = 2 &times; Nodes - 1 = 2 &times; ${nodes} - 1 = ${n}</div>`;
+        } else {
+            steps += `• في الأنبوب <strong>المفتوح الطرفين</strong>، يزيد <strong>عدد البطون</strong> دائماً بمقدار 1 عن عدد العقد:<br>
+            <strong>عدد البطون (Antinodes)</strong> = عدد العقد + 1 = ${nodes} + 1 = <span class="math-inline">A = ${antinodes}</span><br>
+            • <strong>رتبة النغمة التوافقية (n)</strong> تساوي عدد العقد مباشرة:<br>
+            <div class="math-block">n = Nodes = ${n}</div>`;
+        }
+
+        // [2] إجابة السؤال الثاني
+        steps += `<span class="section-title">[2] إجابة السؤال الثاني (حساب الطول الموجي أو علاقات النسبة):</span>`;
+        
+        if (unknownType === 0 || unknownType === 1) {
+            let lambdaVal = (questionPipeTarget === 'closed') ? (4 * L) / n : (2 * L) / n;
+            steps += `• نستخدم <strong>علاقة الرنين المقابلة</strong> لعزل وحساب <strong>الطول الموجي (λ)</strong>:<br>
+            <div class="math-block">
+                &lambda; = 
+                <div class="math-fraction">
+                    <span class="math-numerator">${questionPipeTarget === 'closed' ? '4 &times; L' : '2 &times; L'}</span>
+                    <span class="math-denominator">n</span>
+                </div>
+                = 
+                <div class="math-fraction">
+                    <span class="math-numerator">${questionPipeTarget === 'closed' ? '4 &times; ' + L : '2 &times; ' + L}</span>
+                    <span class="math-denominator">${n}</span>
+                </div>
+                = ${lambdaVal.toFixed(3)} m
+            </div>`;
+        } else if (unknownType === 2) {
+            let lambdaVal = v / f;
+            steps += `• نطبق <strong>قانون انتشار الأمواج</strong> مباشرة لعدم توفر طول الأنبوب في المعطيات:<br>
+            <div class="math-block">
+                &lambda; = 
+                <div class="math-fraction">
+                    <span class="math-numerator">v</span>
+                    <span class="math-denominator">f</span>
+                </div>
+                = 
+                <div class="math-fraction">
+                    <span class="math-numerator">${v}</span>
+                    <span class="math-denominator">${f}</span>
+                </div>
+                = ${lambdaVal.toFixed(3)} m
+            </div>`;
+        } else {
+            let lambdaVal = (questionPipeTarget === 'closed') ? (4 * L) / n : (2 * L) / n;
+            let nextN = (questionPipeTarget === 'closed') ? (2 * (nodes + 1)) - 1 : (nodes + 1);
+            let ratio = nextN / n;
+            steps += `• أولاً، حساب <strong>الطول الموجي الحالي (&lambda;₁)</strong> بالتعويض المباشر: <span class="math-inline">&lambda;₁ = ${lambdaVal.toFixed(3)} m</span><br>`;
+            steps += `• ثانياً، بما أن الطول <span class="math-inline">L</span> وسرعة الصوت <span class="math-inline">v</span> ثابتين، فإن التردد يتناسب <strong>طردياً</strong> مع رتبة النغمة التوافقية <span class="math-inline">n</span>:<br>
+            • رتبة الرنين التالي هي: <span class="math-inline">n₂ = ${nextN}</span> بينما الرنين الحالي هي: <span class="math-inline">n₁ = ${n}</span><br>
+            • ومنه، نجد <strong>النسبة الرياضية</strong> بالتناسب الطردي:<br>
+            <div class="math-block">
+                <div class="math-fraction"><span class="math-numerator">f&sup2;</span><span class="math-denominator">f&sup1;</span></div>
+                = 
+                <div class="math-fraction"><span class="math-numerator">n&sup2;</span><span class="math-denominator">n&sup1;</span></div>
+                = 
+                <div class="math-fraction"><span class="math-numerator">${nextN}</span><span class="math-denominator">${n}</span></div>
+                = ${ratio.toFixed(2)}
+            </div>`;
+        }
+
+        // [3] إجابة السؤال الثالث
+        steps += `<span class="section-title">[3] إجابة السؤال الثالث (حساب الكمية المستهدفة النهائية):</span>`;
+        
+        if (unknownType === 0) {
+            let lambdaVal = (questionPipeTarget === 'closed') ? (4 * L) / n : (2 * L) / n;
+            let finalV = f * lambdaVal;
+            steps += `• نطبق <strong>القانون العام لسرعة الصوت</strong> لإيجاد الناتج الثابت:<br>
+            <div class="math-block">v = f &times; &lambda; = ${f} &times; ${lambdaVal.toFixed(3)} = ${finalV.toFixed(1)} m s⁻¹</div>`;
+        } 
+        else if (unknownType === 1) {
+            let lambdaVal = (questionPipeTarget === 'closed') ? (4 * L) / n : (2 * L) / n;
+            let finalF = v / lambdaVal;
+            steps += `• <strong>نعزل التردد الأساسي</strong> لحسابه رياضياً وبشكل مباشر:<br>
+            <div class="math-block">
+                f = 
+                <div class="math-fraction">
+                    <span class="math-numerator">v</span>
+                    <span class="math-denominator">&lambda;</span>
+                </div>
+                = 
+                <div class="math-fraction">
+                    <span class="math-numerator">${v}</span>
+                    <span class="math-denominator">${lambdaVal.toFixed(3)}</span>
+                </div>
+                = ${finalF.toFixed(1)} Hz
+            </div>`;
+        } 
+        else if (unknownType === 2) {
+            let lambdaVal = v / f;
+            let finalL = (questionPipeTarget === 'closed') ? (n * lambdaVal) / 4 : (n * lambdaVal) / 2;
+            steps += `• نعوض قيمة الطول الموجي المستنتجة لـ <strong>حساب طول عموم عمود الهواء (L)</strong>:<br>
+            <div class="math-block">
+                L = 
+                <div class="math-fraction">
+                    <span class="math-numerator">${questionPipeTarget === 'closed' ? 'n &times; &lambda;' : 'n &times; &lambda;'}</span>
+                    <span class="math-denominator">${questionPipeTarget === 'closed' ? '4' : '2'}</span>
+                </div>
+                = 
+                <div class="math-fraction">
+                    <span class="math-numerator">${n} &times; ${lambdaVal.toFixed(3)}</span>
+                    <span class="math-denominator">${questionPipeTarget === 'closed' ? '4' : '2'}</span>
+                </div>
+                = ${finalL.toFixed(3)} m
+            </div>`;
+        } else {
+            let nextN = (questionPipeTarget === 'closed') ? (2 * (nodes + 1)) - 1 : (nodes + 1);
+            let finalF = f * (nextN / n);
+            steps += `• بالضرب التبادلي للنسبة المستخرجة، نجد قيمة <strong>التردد الجديد (f₂)</strong> مباشرة وبدقة عالية:<br>
+            <div class="math-block">f&sup2; = f&sup1; &times; ${ (nextN / n).toFixed(2) } = ${f} &times; ${(nextN / n).toFixed(2)} = ${finalF.toFixed(1)} Hz</div>`;
+        }
+
+        document.getElementById('answer-steps').innerHTML = steps;
+    }
+
+    function showAnswer() {
+        document.getElementById('model-answer-box').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
