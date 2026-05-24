@@ -398,7 +398,6 @@
     };
 
     let currentPipe = 'closed';
-    let questionPipeTarget = 'closed'; 
     let currentUnknownType = -1; 
 
     window.onload = function() {
@@ -441,7 +440,6 @@
         document.getElementById('model-answer-box').style.display = 'none';
 
         currentUnknownType = Math.floor(Math.random() * 4);
-        questionPipeTarget = (Math.random() > 0.5) ? 'closed' : 'open';
 
         if (currentUnknownType === 0) {
             document.getElementById('group-v').style.display = 'none'; 
@@ -467,7 +465,7 @@
 
     function generateQuestionFromInputs() {
         if (currentUnknownType === -1) {
-            alert("الرجاء الضداد على الزر الأصفر أولاً لتحديد فكرة التحدي!");
+            alert("الرجاء الضغط على الزر الأصفر أولاً لتحديد فكرة التحدي!");
             return;
         }
 
@@ -502,8 +500,9 @@
         quizSection.style.display = 'block';
         document.getElementById('model-answer-box').style.display = 'none';
 
-        const pipeText = (questionPipeTarget === 'closed') ? "مغلق من طرف واحد" : "مفتوح الطرفين";
-        let n = (questionPipeTarget === 'closed') ? (2 * nodes) - 1 : nodes;
+        // تم ربط الصياغة بنوع التبويب الفعلي والمفتوح حالياً أمام المستخدم لمنع التعارض
+        const pipeText = (currentPipe === 'closed') ? "مغلق من طرف واحد" : "مفتوح الطرفين";
+        let n = (currentPipe === 'closed') ? (2 * nodes) - 1 : nodes;
         let resonanceText = getResonanceOrderText(nodes);
 
         let questionHTML = `أنبوب هوائي <strong>${pipeText}</strong> أظهر نمط <strong>الرنين ${resonanceText}</strong> حيث يحتوي عمود الهواء على عدد عقد يبلغ (<strong>${nodes}</strong>). `;
@@ -543,13 +542,13 @@
     }
 
     function buildModelAnswer(unknownType, L, nodes, f, v, n, resonanceText) {
-        let antinodes = (questionPipeTarget === 'closed') ? nodes : nodes + 1;
+        let antinodes = (currentPipe === 'closed') ? nodes : nodes + 1;
         let steps = "";
 
         // [1] إجابة السؤال الأول
         steps += `<span class="section-title">[1] إجابة السؤال الأول (الخصائص الهندسية ورتبة الرنين):</span>`;
         steps += `• حالة الرنين المعروضة هندسياً تمثل نمط <strong>الرنين ${resonanceText}</strong>.<br>`;
-        if (questionPipeTarget === 'closed') {
+        if (currentPipe === 'closed') {
             steps += `• في الأنبوب <strong>المغلق من طرف واحد</strong>، يتساوى دائماً <strong>عدد العقد والبطون</strong>:<br>
             <strong>عدد البطون (Antinodes)</strong> = عدد العقد = <span class="math-inline">A = ${antinodes}</span><br>
             • <strong>رتبة النغمة التوافقية (n)</strong> المرتبطة بهذا الرنين تأخذ القيم الفردية فقط:<br>
@@ -565,17 +564,17 @@
         steps += `<span class="section-title">[2] إجابة السؤال الثاني (حساب الطول الموجي أو علاقات النسبة):</span>`;
         
         if (unknownType === 0 || unknownType === 1) {
-            let lambdaVal = (questionPipeTarget === 'closed') ? (4 * L) / n : (2 * L) / n;
+            let lambdaVal = (currentPipe === 'closed') ? (4 * L) / n : (2 * L) / n;
             steps += `• نستخدم <strong>علاقة الرنين المقابلة</strong> لعزل وحساب <strong>الطول الموجي (λ)</strong>:<br>
             <div class="math-block">
                 &lambda; = 
                 <div class="math-fraction">
-                    <span class="math-numerator">${questionPipeTarget === 'closed' ? '4 &times; L' : '2 &times; L'}</span>
+                    <span class="math-numerator">${currentPipe === 'closed' ? '4 &times; L' : '2 &times; L'}</span>
                     <span class="math-denominator">n</span>
                 </div>
                 = 
                 <div class="math-fraction">
-                    <span class="math-numerator">${questionPipeTarget === 'closed' ? '4 &times; ' + L : '2 &times; ' + L}</span>
+                    <span class="math-numerator">${currentPipe === 'closed' ? '4 &times; ' + L : '2 &times; ' + L}</span>
                     <span class="math-denominator">${n}</span>
                 </div>
                 = ${lambdaVal.toFixed(3)} m
@@ -597,8 +596,8 @@
                 = ${lambdaVal.toFixed(3)} m
             </div>`;
         } else {
-            let lambdaVal = (questionPipeTarget === 'closed') ? (4 * L) / n : (2 * L) / n;
-            let nextN = (questionPipeTarget === 'closed') ? (2 * (nodes + 1)) - 1 : (nodes + 1);
+            let lambdaVal = (currentPipe === 'closed') ? (4 * L) / n : (2 * L) / n;
+            let nextN = (currentPipe === 'closed') ? (2 * (nodes + 1)) - 1 : (nodes + 1);
             let ratio = nextN / n;
             steps += `• أولاً، حساب <strong>الطول الموجي الحالي (&lambda;₁)</strong> بالتعويض المباشر: <span class="math-inline">&lambda;₁ = ${lambdaVal.toFixed(3)} m</span><br>`;
             steps += `• ثانياً، بما أن الطول <span class="math-inline">L</span> وسرعة الصوت <span class="math-inline">v</span> ثابتين، فإن التردد يتناسب <strong>طردياً</strong> مع رتبة النغمة التوافقية <span class="math-inline">n</span>:<br>
@@ -618,13 +617,13 @@
         steps += `<span class="section-title">[3] إجابة السؤال الثالث (حساب الكمية المستهدفة النهائية):</span>`;
         
         if (unknownType === 0) {
-            let lambdaVal = (questionPipeTarget === 'closed') ? (4 * L) / n : (2 * L) / n;
+            let lambdaVal = (currentPipe === 'closed') ? (4 * L) / n : (2 * L) / n;
             let finalV = f * lambdaVal;
             steps += `• نطبق <strong>القانون العام لسرعة الصوت</strong> لإيجاد الناتج الثابت:<br>
             <div class="math-block">v = f &times; &lambda; = ${f} &times; ${lambdaVal.toFixed(3)} = ${finalV.toFixed(1)} m s⁻¹</div>`;
         } 
         else if (unknownType === 1) {
-            let lambdaVal = (questionPipeTarget === 'closed') ? (4 * L) / n : (2 * L) / n;
+            let lambdaVal = (currentPipe === 'closed') ? (4 * L) / n : (2 * L) / n;
             let finalF = v / lambdaVal;
             steps += `• <strong>نعزل التردد الأساسي</strong> لحسابه رياضياً وبشكل مباشر:<br>
             <div class="math-block">
@@ -641,25 +640,25 @@
                 = ${finalF.toFixed(1)} Hz
             </div>`;
         } 
-        else if (unknownType === 2) {
+        else if (currentPipe === 'closed' ? (n * (v / f)) / 4 : (n * (v / f)) / 2) {
             let lambdaVal = v / f;
-            let finalL = (questionPipeTarget === 'closed') ? (n * lambdaVal) / 4 : (n * lambdaVal) / 2;
+            let finalL = (currentPipe === 'closed') ? (n * lambdaVal) / 4 : (n * lambdaVal) / 2;
             steps += `• نعوض قيمة الطول الموجي المستنتجة لـ <strong>حساب طول عموم عمود الهواء (L)</strong>:<br>
             <div class="math-block">
                 L = 
                 <div class="math-fraction">
-                    <span class="math-numerator">${questionPipeTarget === 'closed' ? 'n &times; &lambda;' : 'n &times; &lambda;'}</span>
-                    <span class="math-denominator">${questionPipeTarget === 'closed' ? '4' : '2'}</span>
+                    <span class="math-numerator">${currentPipe === 'closed' ? 'n &times; &lambda;' : 'n &times; &lambda;'}</span>
+                    <span class="math-denominator">${currentPipe === 'closed' ? '4' : '2'}</span>
                 </div>
                 = 
                 <div class="math-fraction">
                     <span class="math-numerator">${n} &times; ${lambdaVal.toFixed(3)}</span>
-                    <span class="math-denominator">${questionPipeTarget === 'closed' ? '4' : '2'}</span>
+                    <span class="math-denominator">${currentPipe === 'closed' ? '4' : '2'}</span>
                 </div>
                 = ${finalL.toFixed(3)} m
             </div>`;
         } else {
-            let nextN = (questionPipeTarget === 'closed') ? (2 * (nodes + 1)) - 1 : (nodes + 1);
+            let nextN = (currentPipe === 'closed') ? (2 * (nodes + 1)) - 1 : (nodes + 1);
             let finalF = f * (nextN / n);
             steps += `• بالضرب التبادلي للنسبة المستخرجة، نجد قيمة <strong>التردد الجديد (f₂)</strong> مباشرة وبدقة عالية:<br>
             <div class="math-block">f&sup2; = f&sup1; &times; ${ (nextN / n).toFixed(2) } = ${f} &times; ${(nextN / n).toFixed(2)} = ${finalF.toFixed(1)} Hz</div>`;
